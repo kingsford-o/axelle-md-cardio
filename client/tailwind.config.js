@@ -18,6 +18,7 @@ export default {
         ok: "#17803D",
         muted: "#5B5A66",
         border: "#2A2A45",
+        purple: "#A855F7",
       },
     },
   },

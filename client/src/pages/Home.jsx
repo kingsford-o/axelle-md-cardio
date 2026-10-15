@@ -37,7 +37,8 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-brand/20 to-brand/5 border border-brand/30 rounded-2xl p-6"
+          onClick={() => navigate("/heartrate")}
+          className="bg-gradient-to-br from-brand/20 to-brand/5 border border-brand/30 rounded-2xl p-6 cursor-pointer hover:border-brand transition-colors"
         >
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -74,10 +75,11 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-navy/50 border border-border rounded-2xl p-4"
+            onClick={() => navigate("/challenges")}
+            className="bg-gradient-to-br from-brand/20 to-brand/5 border border-brand/30 rounded-2xl p-4 cursor-pointer hover:border-brand transition-colors"
           >
-            <p className="text-muted text-sm mb-1">Recovery Time</p>
-            <p className="text-2xl font-bold text-white">45s</p>
+            <p className="text-muted text-sm mb-1">Points Earned</p>
+            <p className="text-2xl font-bold text-white">150</p>
           </motion.div>
         </div>
 
@@ -89,7 +91,7 @@ export default function Home() {
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-white">Today's Lessons</h2>
-            <button onClick={() => navigate("/myths")} className="text-brand text-sm font-semibold">View All</button>
+            <button onClick={() => navigate("/challenges")} className="text-brand text-sm font-semibold">View Challenges</button>
           </div>
           <div className="space-y-3">
             {lessons.map((lesson, index) => (
@@ -134,28 +136,52 @@ export default function Home() {
           className="grid grid-cols-2 gap-4"
         >
           <button
-            onClick={() => navigate("/quiz/1")}
+            onClick={() => navigate("/breathing")}
+            className="bg-gradient-to-br from-brand/20 to-brand/5 border border-brand/30 rounded-2xl p-4 text-left hover:border-brand transition-colors"
+          >
+            <div className="w-10 h-10 bg-brand/20 rounded-full flex items-center justify-center mb-3">
+              <svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <p className="text-white font-semibold">Breathing</p>
+            <p className="text-muted text-sm">Calm your mind</p>
+          </button>
+          <button
+            onClick={() => navigate("/assistant")}
             className="bg-gradient-to-br from-pink/20 to-pink/5 border border-pink/30 rounded-2xl p-4 text-left hover:border-pink transition-colors"
           >
             <div className="w-10 h-10 bg-pink/20 rounded-full flex items-center justify-center mb-3">
               <svg className="w-5 h-5 text-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
             </div>
-            <p className="text-white font-semibold">Take Quiz</p>
-            <p className="text-muted text-sm">Test your knowledge</p>
+            <p className="text-white font-semibold">AI Assistant</p>
+            <p className="text-muted text-sm">Ask questions</p>
           </button>
           <button
-            onClick={() => navigate("/review")}
+            onClick={() => navigate("/journal")}
             className="bg-gradient-to-br from-ok/20 to-ok/5 border border-ok/30 rounded-2xl p-4 text-left hover:border-ok transition-colors"
           >
             <div className="w-10 h-10 bg-ok/20 rounded-full flex items-center justify-center mb-3">
               <svg className="w-5 h-5 text-ok" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
             </div>
-            <p className="text-white font-semibold">Progress</p>
-            <p className="text-muted text-sm">View your stats</p>
+            <p className="text-white font-semibold">Journal</p>
+            <p className="text-muted text-sm">Track wellness</p>
+          </button>
+          <button
+            onClick={() => navigate("/challenges")}
+            className="bg-gradient-to-br from-purple-500/20 to-purple-500/5 border border-purple-500/30 rounded-2xl p-4 text-left hover:border-purple-500 transition-colors"
+          >
+            <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center mb-3">
+              <svg className="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            <p className="text-white font-semibold">Challenges</p>
+            <p className="text-muted text-sm">Earn points</p>
           </button>
         </motion.div>
       </div>
