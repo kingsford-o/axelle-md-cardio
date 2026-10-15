@@ -15,4 +15,9 @@
 }
 /* eslint-enable */
 
-body { margin: 0; background: #1B1B30; font-family: var(--font-sans); color: #1B1B30; }
+body { margin: 0; background: #1B1B30; font-family: var(--font-sans); color: #FBF8F2; }
+
+.light body {
+  background: #FBF8F2;
+  color: #1B1B30;
+}
