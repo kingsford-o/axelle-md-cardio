@@ -78,8 +78,6 @@ export default function Lesson() {
 
   return (
     <div className="min-h-dvh bg-navy flex flex-col">
-      </div>
-
       {/* Header */}
       <div className="px-6 py-4 flex items-center gap-4">
         <button onClick={() => navigate("/home")} className="text-white">

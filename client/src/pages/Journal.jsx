@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router-dom";
+import { account, databases, Query, ID, COLLECTIONS, APPWRITE_DATABASE_ID } from "../lib/appwrite.js";
 
 export default function Journal() {
   const navigate = useNavigate();
@@ -31,10 +32,40 @@ export default function Journal() {
     }
   ]);
 
+  useEffect(() => {
+    async function loadEntries() {
+      try {
+        const user = await account.get();
+        if (user) {
+          const res = await databases.listDocuments(
+            APPWRITE_DATABASE_ID,
+            COLLECTIONS.JOURNAL_ENTRIES,
+            [Query.equal("userId", user.$id)]
+          );
+          if (res.documents && res.documents.length > 0) {
+            setEntries(
+              res.documents.map((d) => ({
+                id: d.$id,
+                date: d.date || new Date(d.$createdAt || Date.now()).toLocaleDateString(),
+                mood: d.mood,
+                symptoms: d.symptoms || "None",
+                activity: d.activity || "Not specified",
+                notes: d.notes || "",
+              }))
+            );
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to load journal entries from Appwrite:", err);
+      }
+    }
+    loadEntries();
+  }, []);
+
   const moods = ["Great", "Good", "Fair", "Poor", "Terrible"];
   const symptomsOptions = ["None", "Chest pain", "Shortness of breath", "Fatigue", "Dizziness", "Palpitations"];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newEntry = {
       id: Date.now(),
       date: "Today",
@@ -44,6 +75,28 @@ export default function Journal() {
       notes: entry.notes || ""
     };
     setEntries([newEntry, ...entries]);
+
+    try {
+      const user = await account.get();
+      if (user) {
+        await databases.createDocument(
+          APPWRITE_DATABASE_ID,
+          COLLECTIONS.JOURNAL_ENTRIES,
+          ID.unique(),
+          {
+            userId: user.$id,
+            mood: entry.mood,
+            symptoms: entry.symptoms || "None",
+            activity: entry.activity || "Not specified",
+            notes: entry.notes || "",
+            date: "Today",
+          }
+        );
+      }
+    } catch (err) {
+      console.warn("Failed to save journal entry to Appwrite:", err);
+    }
+
     setEntry({ mood: "", symptoms: "", activity: "", notes: "" });
     setShowModal(false);
   };
@@ -72,8 +125,6 @@ export default function Journal() {
 
   return (
     <div className="min-h-dvh bg-navy flex flex-col">
-      </div>
-
       {/* Header */}
       <div className="px-6 py-4 flex items-center gap-4">
         <button onClick={() => navigate("/home")} className="text-white">

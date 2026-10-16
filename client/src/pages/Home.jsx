@@ -1,12 +1,41 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { account, databases, Query, COLLECTIONS, APPWRITE_DATABASE_ID } from "../lib/appwrite.js";
 
-export default function Home() {
+export default function Home({ onLogout }) {
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
   const [expandedSection, setExpandedSection] = useState(null);
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const user = await account.get();
+        if (user) {
+          try {
+            const res = await databases.listDocuments(
+              APPWRITE_DATABASE_ID,
+              COLLECTIONS.PROFILES,
+              [Query.equal("userId", user.$id)]
+            );
+            if (res.documents && res.documents.length > 0) {
+              setProfile(res.documents[0]);
+            } else {
+              setProfile({ fullName: user.name || user.email?.split("@")[0], points: 150 });
+            }
+          } catch {
+            setProfile({ fullName: user.name || user.email?.split("@")[0], points: 150 });
+          }
+        }
+      } catch (e) {
+        console.warn("Could not fetch profile:", e);
+      }
+    }
+    fetchProfile();
+  }, []);
 
   const lessons = [
     { id: 1, title: "Understanding Your Heart Rate", duration: "5 min", completed: true },
@@ -35,9 +64,19 @@ export default function Home() {
       </motion.button>
 
       {/* Header */}
-      <div className="px-6 py-4">
-        <h1 className={`text-2xl font-extrabold ${isDark ? 'text-white' : 'text-navy'}`}>Good Morning</h1>
-        <p className="text-muted">Here's your heart health overview</p>
+      <div className="px-6 py-4 flex items-center justify-between">
+        <div>
+          <h1 className={`text-2xl font-extrabold ${isDark ? 'text-white' : 'text-navy'}`}>
+            Good Morning{profile?.fullName || profile?.full_name ? `, ${profile.fullName || profile.full_name}` : ""}
+          </h1>
+          <p className="text-muted">Here's your heart health overview</p>
+        </div>
+        <button
+          onClick={onLogout}
+          className="text-muted hover:text-white transition-colors text-sm"
+        >
+          Sign out
+        </button>
       </div>
 
       {/* Main Content */}
@@ -88,7 +127,7 @@ export default function Home() {
             className={`bg-gradient-to-br from-brand/20 to-brand/5 border border-brand/30 rounded-2xl p-4 cursor-pointer hover:border-brand transition-colors ${isDark ? '' : 'bg-brand/10'}`}
           >
             <p className="text-muted text-sm mb-1">Points Earned</p>
-            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-navy'}`}>150</p>
+            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-navy'}`}>{profile?.points ?? 150}</p>
           </motion.div>
         </div>
 

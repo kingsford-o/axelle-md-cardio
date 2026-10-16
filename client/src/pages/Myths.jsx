@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -47,8 +47,6 @@ export default function Myths() {
 
   return (
     <div className="min-h-dvh bg-navy flex flex-col">
-      </div>
-
       {/* Header */}
       <div className="px-6 py-4 flex items-center gap-4">
         <button onClick={() => navigate("/home")} className="text-white">

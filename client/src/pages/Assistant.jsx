@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 
 export default function Assistant() {
@@ -93,8 +93,6 @@ export default function Assistant() {
 
   return (
     <div className="min-h-dvh bg-navy flex flex-col">
-      </div>
-
       {/* Header */}
       <div className="px-6 py-4 flex items-center gap-4 border-b border-border">
         <button onClick={() => navigate("/home")} className="text-white">

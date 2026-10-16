@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
+import { account, databases, Query, ID, COLLECTIONS, APPWRITE_DATABASE_ID } from "../lib/appwrite.js";
 
 export default function Survey() {
   const navigate = useNavigate();
@@ -8,11 +9,53 @@ export default function Survey() {
   const [gender, setGender] = useState("");
   const [activityLevel, setActivityLevel] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     localStorage.setItem("kyh_onboarded", "1");
     localStorage.setItem("kyh_age", age);
     localStorage.setItem("kyh_gender", gender);
     localStorage.setItem("kyh_activity", activityLevel);
+
+    try {
+      const user = await account.get();
+      if (user) {
+        const res = await databases.listDocuments(
+          APPWRITE_DATABASE_ID,
+          COLLECTIONS.PROFILES,
+          [Query.equal("userId", user.$id)]
+        );
+        if (res.documents && res.documents.length > 0) {
+          await databases.updateDocument(
+            APPWRITE_DATABASE_ID,
+            COLLECTIONS.PROFILES,
+            res.documents[0].$id,
+            {
+              age: parseInt(age, 10),
+              gender,
+              activityLevel,
+            }
+          );
+        } else {
+          await databases.createDocument(
+            APPWRITE_DATABASE_ID,
+            COLLECTIONS.PROFILES,
+            ID.unique(),
+            {
+              userId: user.$id,
+              email: user.email,
+              fullName: user.name,
+              age: parseInt(age, 10),
+              gender,
+              activityLevel,
+              points: 100,
+              streak: 1,
+            }
+          );
+        }
+      }
+    } catch (e) {
+      console.warn("Profile sync error:", e);
+    }
+
     navigate("/home");
   };
 

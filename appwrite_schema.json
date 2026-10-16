@@ -1,0 +1,137 @@
+{
+  "$comment": "Appwrite Database Schema Definition for Axelle Cardio (Know Your Heart)",
+  "databaseId": "axelle_cardio",
+  "name": "Axelle Cardio Telemetry Database",
+  "collections": [
+    {
+      "$id": "profiles",
+      "name": "User Profiles",
+      "permissions": [
+        "read(\"users\")",
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "userId", "type": "string", "size": 36, "required": true },
+        { "key": "email", "type": "string", "size": 255, "required": true },
+        { "key": "fullName", "type": "string", "size": 255, "required": false },
+        { "key": "phone", "type": "string", "size": 32, "required": false },
+        { "key": "avatarUrl", "type": "string", "size": 1000, "required": false },
+        { "key": "age", "type": "integer", "required": false, "min": 1, "max": 130 },
+        { "key": "gender", "type": "string", "size": 30, "required": false },
+        { "key": "activityLevel", "type": "string", "size": 50, "required": false },
+        { "key": "points", "type": "integer", "required": false, "default": 100 },
+        { "key": "streak", "type": "integer", "required": false, "default": 1 },
+        { "key": "lastActive", "type": "datetime", "required": false }
+      ],
+      "indexes": [
+        { "key": "userId_unique", "type": "unique", "attributes": ["userId"] },
+        { "key": "email_idx", "type": "key", "attributes": ["email"] }
+      ]
+    },
+    {
+      "$id": "journal_entries",
+      "name": "Journal Entries",
+      "permissions": [
+        "read(\"users\")",
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "userId", "type": "string", "size": 36, "required": true },
+        { "key": "mood", "type": "string", "size": 50, "required": true },
+        { "key": "symptoms", "type": "string", "size": 500, "required": false },
+        { "key": "activity", "type": "string", "size": 255, "required": false },
+        { "key": "notes", "type": "string", "size": 2000, "required": false },
+        { "key": "date", "type": "string", "size": 50, "required": false }
+      ],
+      "indexes": [
+        { "key": "userId_idx", "type": "key", "attributes": ["userId"] }
+      ]
+    },
+    {
+      "$id": "challenges_progress",
+      "name": "Challenges Progress",
+      "permissions": [
+        "read(\"users\")",
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "userId", "type": "string", "size": 36, "required": true },
+        { "key": "challengeId", "type": "string", "size": 50, "required": true },
+        { "key": "completed", "type": "boolean", "required": false, "default": false },
+        { "key": "completedAt", "type": "datetime", "required": false }
+      ],
+      "indexes": [
+        { "key": "userId_challenge_unique", "type": "unique", "attributes": ["userId", "challengeId"] }
+      ]
+    },
+    {
+      "$id": "lessons_progress",
+      "name": "Lessons Progress",
+      "permissions": [
+        "read(\"users\")",
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "userId", "type": "string", "size": 36, "required": true },
+        { "key": "lessonId", "type": "integer", "required": true },
+        { "key": "completed", "type": "boolean", "required": false, "default": false },
+        { "key": "completedAt", "type": "datetime", "required": false }
+      ],
+      "indexes": [
+        { "key": "userId_lesson_unique", "type": "unique", "attributes": ["userId", "lessonId"] }
+      ]
+    },
+    {
+      "$id": "quiz_results",
+      "name": "Quiz Results",
+      "permissions": [
+        "read(\"users\")",
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "userId", "type": "string", "size": 36, "required": true },
+        { "key": "quizId", "type": "integer", "required": true },
+        { "key": "score", "type": "integer", "required": true },
+        { "key": "totalQuestions", "type": "integer", "required": true }
+      ],
+      "indexes": [
+        { "key": "userId_idx", "type": "key", "attributes": ["userId"] }
+      ]
+    },
+    {
+      "$id": "heart_rate_logs",
+      "name": "Heart Rate Logs",
+      "permissions": [
+        "read(\"users\")",
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "userId", "type": "string", "size": 36, "required": true },
+        { "key": "bpm", "type": "integer", "required": true },
+        { "key": "category", "type": "string", "size": 50, "required": false, "default": "resting" },
+        { "key": "recordedAt", "type": "datetime", "required": false }
+      ],
+      "indexes": [
+        { "key": "userId_idx", "type": "key", "attributes": ["userId"] }
+      ]
+    }
+  ]
+}

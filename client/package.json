@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
+    "appwrite": "^29.0.0",
     "autoprefixer": "^10.6.1",
     "motion": "^14.3.0",
     "react": "^19.2.8",

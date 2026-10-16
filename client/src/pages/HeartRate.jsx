@@ -1,82 +1,81 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
+
+// Deterministic pure generation for consistent rendering
+const generateData = (points) => {
+  const data = [];
+  const base = 72;
+  for (let i = 0; i < points; i++) {
+    const variation = Math.sin(i * 1.5) * 6 + Math.cos(i * 0.7) * 4;
+    data.push(Math.round(base + variation));
+  }
+  return data;
+};
+
+const timeRanges = {
+  day: { label: "Today", points: 24, unit: "Hours" },
+  week: { label: "This Week", points: 7, unit: "Days" },
+  month: { label: "This Month", points: 30, unit: "Days" }
+};
+
+const GraphBar = ({ value, index, min, max }) => {
+  const range = max > min ? max - min : 1;
+  const height = ((value - min) / range) * 100 + 20;
+  const isMax = value === max;
+  const isMin = value === min;
+
+  return (
+    <motion.div
+      initial={{ height: 0 }}
+      animate={{ height: `${height}%` }}
+      transition={{ delay: index * 0.02 }}
+      className={`flex-1 mx-0.5 rounded-t-sm ${
+        isMax ? "bg-pink" : isMin ? "bg-ok" : "bg-brand"
+      }`}
+      style={{ minHeight: "8px" }}
+    />
+  );
+};
+
+const InsightCard = ({ icon, title, value, trend, color }) => (
+  <div className="bg-navy/50 border border-border rounded-xl p-4">
+    <div className="flex items-center gap-3 mb-2">
+      <div className={`w-10 h-10 bg-${color}/20 rounded-full flex items-center justify-center`}>
+        {icon}
+      </div>
+      <div>
+        <p className="text-muted text-sm">{title}</p>
+        <p className="text-xl font-bold text-white">{value}</p>
+      </div>
+    </div>
+    {trend && (
+      <div className={`flex items-center gap-1 text-sm ${trend.positive ? "text-ok" : "text-pink"}`}>
+        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          {trend.positive ? (
+            <path d="M7 14l5-5 5 5H7z"/>
+          ) : (
+            <path d="M7 10l5 5 5-5H7z"/>
+          )}
+        </svg>
+        <span>{trend.text}</span>
+      </div>
+    )}
+  </div>
+);
 
 export default function HeartRate() {
   const navigate = useNavigate();
   const [timeRange, setTimeRange] = useState("day");
 
-  // Mock data for heart rate
-  const generateData = (points) => {
-    const data = [];
-    let base = 72;
-    for (let i = 0; i < points; i++) {
-      base += (Math.random() - 0.5) * 10;
-      data.push(Math.round(base));
-    }
-    return data;
-  };
-
-  const timeRanges = {
-    day: { label: "Today", points: 24, unit: "Hours" },
-    week: { label: "This Week", points: 7, unit: "Days" },
-    month: { label: "This Month", points: 30, unit: "Days" }
-  };
-
   const currentRange = timeRanges[timeRange];
-  const data = generateData(currentRange.points);
-  const min = Math.min(...data);
-  const max = Math.max(...data);
-  const avg = Math.round(data.reduce((a, b) => a + b, 0) / data.length);
-
-  const GraphBar = ({ value, index, total }) => {
-    const height = ((value - min) / (max - min)) * 100 + 20;
-    const isMax = value === max;
-    const isMin = value === min;
-
-    return (
-      <motion.div
-        initial={{ height: 0 }}
-        animate={{ height: `${height}%` }}
-        transition={{ delay: index * 0.02 }}
-        className={`flex-1 mx-0.5 rounded-t-sm ${
-          isMax ? "bg-pink" : isMin ? "bg-ok" : "bg-brand"
-        }`}
-        style={{ minHeight: "8px" }}
-      />
-    );
-  };
-
-  const InsightCard = ({ icon, title, value, trend, color }) => (
-    <div className="bg-navy/50 border border-border rounded-xl p-4">
-      <div className="flex items-center gap-3 mb-2">
-        <div className={`w-10 h-10 bg-${color}/20 rounded-full flex items-center justify-center`}>
-          {icon}
-        </div>
-        <div>
-          <p className="text-muted text-sm">{title}</p>
-          <p className="text-xl font-bold text-white">{value}</p>
-        </div>
-      </div>
-      {trend && (
-        <div className={`flex items-center gap-1 text-sm ${trend.positive ? "text-ok" : "text-pink"}`}>
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            {trend.positive ? (
-              <path d="M7 14l5-5 5 5H7z"/>
-            ) : (
-              <path d="M7 10l5 5 5-5H7z"/>
-            )}
-          </svg>
-          <span>{trend.text}</span>
-        </div>
-      )}
-    </div>
-  );
+  const data = useMemo(() => generateData(currentRange.points), [currentRange.points]);
+  const min = useMemo(() => Math.min(...data), [data]);
+  const max = useMemo(() => Math.max(...data), [data]);
+  const avg = useMemo(() => Math.round(data.reduce((a, b) => a + b, 0) / data.length), [data]);
 
   return (
     <div className="min-h-dvh bg-navy flex flex-col">
-      </div>
-
       {/* Header */}
       <div className="px-6 py-4 flex items-center gap-4">
         <button onClick={() => navigate("/home")} className="text-white">
@@ -161,7 +160,7 @@ export default function HeartRate() {
           </div>
           <div className="h-40 flex items-end gap-1">
             {data.map((value, index) => (
-              <GraphBar key={index} value={value} index={index} total={data.length} />
+              <GraphBar key={index} value={value} index={index} min={min} max={max} />
             ))}
           </div>
           <div className="mt-4 flex justify-between text-xs text-muted">

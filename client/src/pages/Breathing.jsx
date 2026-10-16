@@ -70,15 +70,13 @@ export default function Breathing() {
 
   const getPhaseColor = () => {
     if (phase === "inhale") return "text-brand";
-    if (phase === "hold") => "text-pink";
+    if (phase === "hold") return "text-pink";
     if (phase === "exhale") return "text-ok";
     return "text-muted";
   };
 
   return (
     <div className="min-h-dvh bg-navy flex flex-col">
-      </div>
-
       {/* Header */}
       <div className="px-6 py-4 flex items-center gap-4">
         <button onClick={() => navigate("/home")} className="text-white">
