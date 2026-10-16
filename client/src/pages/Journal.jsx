@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { account, databases, Query, ID, COLLECTIONS, APPWRITE_DATABASE_ID } from "../lib/appwrite.js";
+import BackButton from "../components/BackButton.jsx";
 
 export default function Journal() {
   const navigate = useNavigate();

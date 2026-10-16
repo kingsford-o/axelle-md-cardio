@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton.jsx";
 
 export default function Breathing() {
   const navigate = useNavigate();

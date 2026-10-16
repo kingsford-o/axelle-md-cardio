@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useParams, useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton.jsx";
 
 export default function Lesson() {
   const { slug } = useParams();

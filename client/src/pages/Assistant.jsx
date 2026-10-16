@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton.jsx";
 
 export default function Assistant() {
   const navigate = useNavigate();

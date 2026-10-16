@@ -1,17 +1,12 @@
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton.jsx";
 
 export default function Welcome() {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-dvh bg-navy flex flex-col">
-      {/* Notification Bar */}
-      <div className="bg-brand/20 border-y border-brand/30 px-6 py-3">
-        <p className="text-brand text-xs font-medium">
-          Active Telemetry Stage: 1.0 Welcome & Tactile Ripple
-        </p>
-      </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
